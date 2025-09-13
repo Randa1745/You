@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login Redirect</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#f6f8fa;padding:40px}
+    .card{max-width:400px;margin:auto;background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,.1)}
+    input,button{width:100%;padding:10px;margin-top:10px;border-radius:6px;border:1px solid #ccc}
+    button{background:#2ea44f;color:#fff;font-weight:bold;cursor:pointer}
+    button:hover{background:#2c974b}
+    p{color:#d00;font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Masukkan Password</h2>
+    <input id="password" type="password" placeholder="Ketik password" />
+    <button onclick="cekPassword()">Login</button>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    // ganti dengan raw link JSON kamu
+    const rawUrl = "https://raw.githubusercontent.com/USERNAME/REPO/branch/db.json";
+
+    async function cekPassword() {
+      const inputPw = document.getElementById("password").value.trim();
+      const statusEl = document.getElementById("status");
+      statusEl.textContent = "Memeriksa...";
+
+      try {
+        const res = await fetch(rawUrl);
+        if (!res.ok) throw new Error("Gagal ambil data JSON");
+        const data = await res.json();
+
+        if (inputPw === data.password) {
+          statusEl.style.color = "green";
+          statusEl.textContent = "Password benar, redirect...";
+          window.location.href = data.link; // redirect
+        } else {
+          statusEl.style.color = "red";
+          statusEl.textContent = "Password salah!";
+        }
+      } catch (err) {
+        statusEl.style.color = "red";
+        statusEl.textContent = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
